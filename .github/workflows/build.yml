@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  GODOT_VERSION: 4.3-stable # Укажи свою версию Godot (например, 4.2.2-stable или 4.3-stable)
+  GODOT_VERSION: 4.3-stable
   EXPORT_NAME: Roguelike
 
 jobs:
@@ -23,20 +23,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android Build Tools & Platform
         run: |
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Download Godot & Export Templates
         run: |
           wget -q https://github.com{GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip
           unzip -q Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
-          chmod +x /usr/local/bin/godot
+          sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
+          sudo chmod +x /usr/local/bin/godot
 
           TEMPLATE_DIR=~/.local/share/godot/export_templates/$(echo ${GODOT_VERSION} | sed 's/-/./g')
           mkdir -p "$TEMPLATE_DIR"
