@@ -21,13 +21,15 @@ jobs:
           cp -rn /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates/ || true
           
           SDK_PATH=$(find / -name "platform-tools" 2>/dev/null | head -n 1 | xargs dirname)
-          echo "Found SDK at: $SDK_PATH"
+          JAVA_PATH=$(dirname $(dirname $(readlink -f $(which javac))))
+          echo "SDK: $SDK_PATH | JAVA: $JAVA_PATH"
           
           keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999
           
           cat << EOF > ~/.config/godot/editor_settings-4.3.tres
           [gd_resource type="EditorSettings" format=3]
           [resource]
+          export/android/java_sdk_path = "$JAVA_PATH"
           export/android/android_sdk_path = "$SDK_PATH"
           export/android/debug_keystore = "$(pwd)/debug.keystore"
           export/android/debug_keystore_user = "androiddebugkey"
@@ -74,4 +76,3 @@ jobs:
         with:
           name: MyRoguelike-APK
           path: build/game.apk
-          
