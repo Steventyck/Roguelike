@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 env:
-  GODOT_VERSION: 4.3-stable
   EXPORT_NAME: Roguelike
 
 jobs:
@@ -28,21 +27,11 @@ jobs:
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Download Godot & Export Templates
-        run: |
-          REPO="godotengine/godot"
-          REL="releases/download"
-          BASE="https://github.com"
-          wget -q "$BASE/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q "Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          sudo mv "Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
-          sudo chmod +x /usr/local/bin/godot
-
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/$(echo $GODOT_VERSION | sed 's/-/./g')
-          mkdir -p "$TEMPLATE_DIR"
-          wget -q "$BASE/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q "Godot_v${GODOT_VERSION}_export_templates.tpz" -d /tmp/templates
-          mv /tmp/templates/templates/* "$TEMPLATE_DIR/"
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.3.0
+          include-templates: true
 
       - name: Setup Keystore & Editor Settings
         run: |
@@ -70,3 +59,4 @@ jobs:
         with:
           name: ${EXPORT_NAME}-APK
           path: build/${EXPORT_NAME}.apk
+          
