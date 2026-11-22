@@ -30,15 +30,16 @@ jobs:
 
       - name: Download Godot & Export Templates
         run: |
-          wget -q https://github.com{GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          unzip -q Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
+          BASE_URL="https://github.com{GODOT_VERSION}"
+          wget -q "${BASE_URL}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          sudo mv "Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
           sudo chmod +x /usr/local/bin/godot
 
           TEMPLATE_DIR=~/.local/share/godot/export_templates/$(echo ${GODOT_VERSION} | sed 's/-/./g')
           mkdir -p "$TEMPLATE_DIR"
-          wget -q https://github.com{GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz
-          unzip -q Godot_v${GODOT_VERSION}_export_templates.tpz -d /tmp/templates
+          wget -q "${BASE_URL}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q "Godot_v${GODOT_VERSION}_export_templates.tpz" -d /tmp/templates
           mv /tmp/templates/templates/* "$TEMPLATE_DIR/"
 
       - name: Setup Keystore & Editor Settings
