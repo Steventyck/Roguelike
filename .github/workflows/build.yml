@@ -30,15 +30,17 @@ jobs:
 
       - name: Download Godot & Export Templates
         run: |
-          BASE_URL="https://github.com{GODOT_VERSION}"
-          wget -q "${BASE_URL}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          REPO="godotengine/godot"
+          REL="releases/download"
+          BASE="https://github.com"
+          wget -q "$BASE/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
           unzip -q "Godot_v${GODOT_VERSION}_linux.x86_64.zip"
           sudo mv "Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
           sudo chmod +x /usr/local/bin/godot
 
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/$(echo ${GODOT_VERSION} | sed 's/-/./g')
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/$(echo $GODOT_VERSION | sed 's/-/./g')
           mkdir -p "$TEMPLATE_DIR"
-          wget -q "${BASE_URL}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          wget -q "$BASE/Godot_v${GODOT_VERSION}_export_templates.tpz"
           unzip -q "Godot_v${GODOT_VERSION}_export_templates.tpz" -d /tmp/templates
           mv /tmp/templates/templates/* "$TEMPLATE_DIR/"
 
